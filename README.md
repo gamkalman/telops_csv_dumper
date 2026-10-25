@@ -1,18 +1,39 @@
-###### JDX Spectroscopy File Dumper 
+###### Telops. CSV Dumper 
     
-    This is a simple Python script that dumps  
+    Python script/tool to dump contents of telops. CSV files
+    to separate quality assurance (QA) and GE display data CSV files.
+    Also outputted is a KML file (soon to come, as of this writing). 
 
 ###### GENERAL USAGE
 
+    usage: telops_csv_dump.py [-h] [-d DIRECTORY] [-o OUTDIR] [-v] [-u]
+
+    telops. CSV dumper tool.
+
+    optional arguments:
+      -h, --help            show this help message and exit
+      -d DIRECTORY, --directory DIRECTORY
+                        input directory
+      -o OUTDIR, --outdir OUTDIR
+                        output directory
+      -v, --version         show version.
+      -u, --usage           show usage message.
+ 
 
 ###### USAGE/HOW TO RUN (Windows)
  
-    It is exp
+    Place your *.report.csv files in a directory of your choice.
+    Then run the script:
+    $ python3 telops_csv_dump.py -d <input_directory>
+
+    After running, the outputs should be in the output directory 
+    (-o flag, optional) and look like: *.report_ge_display_data.csv
+    and all_qa_headers.csv.
 
 ###### VERSION
     
-    Version 1.0.0
-    Last Updated: 24 October 2026
+    Beta Version
+    Last Updated: 25 October 2026
 
 ###### 3rd party Python libraries used
 

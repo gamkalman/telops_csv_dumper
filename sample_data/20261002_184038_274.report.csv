@@ -1,0 +1,52 @@
+Name;Value;Unit
+Datacube Id;179096643827396623;
+Measurement time;2026-10-02 18:40:38.274;UTC
+Report time;2026-10-02 18:43:52;UTC
+Width;320;px
+Height;100;px
+OffsetX;0;px
+OffsetY;78;px
+Latitude ground;-0.000001;°
+Longitude ground;0.000001;°
+Brightness temp percentile 25;295.62;K
+Brightness temp percentile 50;297.94;K
+Brightness temp percentile 75;307.77;K
+
+
+Display Sensitivity;100;%;
+Opacity min;50;%;
+Opacity max;95;%;
+Clean Background Fraction;0.5;;
+Background Pca Energy Fraction;0.55;;
+PFA;0.0001;;
+Dual Test PFA;0.0001;;
+Dual Test Correlation Percentile;99.9;;
+Plume Expansion PFA;0.3;;
+Plume Expansion PFA Percentile;10;;
+Identification Criteria Type;0;;
+Identification Threshold;7.5;;
+Sensitivity;50;;
+Specificity;50;;
+Plume Expansion;50;;
+
+
+Name;Formula;Visible;Color;Pixel cnt [px];Area [m²];Mass [g];Concentration Max [ppm*m];Centroid x [px];Centroid y [px];Latitude [°];Longitude [°];
+Bad pixels;;0;#ffff00;12;;;
+Saturated pixels;;0;#ff0000;0;;;
+Saturated pixels in counts;;0;#ff0000;0;;;
+Saturated pixels in current;;0;#ffa500;0;;;
+Tetrachloroethylene;C2Cl4;1;#911eb4;0;;;;
+Ethylene;C2H4;1;#3cb44b;0;;;;
+Acetic acid;C2H4O2;1;#f58230;0;;;;
+Dimethyl sulfoxide;C2H6OS;1;#ffd7b4;0;;;;
+Trichloroethylene;C2HCl3;1;#f032e6;0;;;;
+Propane;C3H8;1;#46f0f0;0;;;;
+Acetone;CH3COCH3;1;#008080;0;;;;
+Methanol;CH3OH;1;#fabed4;0;;;;
+Chloroform;CHCl3;1;#dcbeff;0;;;;
+Ethanol_TEST;C2H6O;1;#aa6e28;77;;;;213.43;31.70;
+Isopropanol_Test;C3H8O;1;#800000;0;;;;
+m-xylene;m-C6H5(CH3)2;1;#d2f53c;0;;;;
+o-Xylene;o-C6H5(CH3)2;1;#aaffc3;0;;;;
+Propene_nQ;C3H6;1;#0000f0;0;;;;
+Sulphur hexafluoride;SF6;1;#0082c8;0;;;;
