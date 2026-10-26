@@ -72,6 +72,41 @@ class telops_csv_file(object):
     pass
 
   @staticmethod
+  def write_all_ge_display_csv(csv_filenames: list, outDir: str) -> None:
+
+    # get header line ; we can just use any file (first one)
+    # to get it
+    # ------------------------------------------------------
+    with open(csv_filenames[0], mode = 'r', newline = '', encoding = 'utf-8') as f:
+      reader = csv.reader(f)
+      header_line = next(reader)
+   
+    # gather all CSV data from all files (GE display)
+    # -----------------------------------------------
+    all_ge_display_lines = []
+
+    for csv_filename in csv_filenames:
+      with open(csv_filename, mode = 'r', newline = '', encoding = 'utf-8') as f:
+        reader = csv.reader(f)
+        next(reader)
+
+        for row in reader:
+          all_ge_display_lines.append(row)
+
+    # finally write out CSV with ALL GE dispaly data
+    # ----------------------------------------------
+    outname_csv_all_ge_display_data = os.path.join(outDir, 'all_ge_display_data.csv')
+    if os.path.isfile(outname_csv_all_ge_display_data):
+      os.remove(outname_csv_all_ge_display_data)
+
+    with open(outname_csv_all_ge_display_data, 'w', newline = '', encoding = 'utf-8') as f:
+      writer = csv.writer(f)
+      writer.writerow(header_line)
+
+      for ge_display_line in all_ge_display_lines:
+        writer.writerow(ge_display_line)
+
+  @staticmethod
   def write_all_qa_data_csv(outname_csv: str, qa_headers: list, outDir: str) -> None:
     
     # remove csv if already exists
@@ -81,7 +116,8 @@ class telops_csv_file(object):
     
     # get header line
     # ---------------
-    csv_header_line = [s.replace('_', ' ') for s in list(qa_headers[0].keys())]
+    csv_header_line = [s.replace('_', ' ') 
+            for s in list(qa_headers[0].keys())]
 
     with open(outname_csv, mode = 'w', newline = '', encoding = 'utf-8') as f:
       
@@ -114,7 +150,8 @@ class telops_csv_file(object):
     
     # establish name of output CSV data with GE display data
     # ------------------------------------------------------
-    outname_csv = self.filename.replace('.csv', '_ge_display_data.csv')
+    outname_csv = self.filename.replace(
+            '.csv', '_ge_display_data.csv')
     if os.path.isfile(outname_csv):
       os.remove(outname_csv)
  
@@ -133,6 +170,10 @@ class telops_csv_file(object):
           csv_line = [source_csv, measurement_time_csv, longitude, latitude] + csv_line
         csv_writer.writerow(csv_line)
         line_counter += 1
+
+    # return output filename of csv created
+    # -------------------------------------
+    return outname_csv
 
   def get_ge_display_data(self):
     '''
@@ -362,11 +403,13 @@ def main():
   # now iterate through and process the CSV files
   # ---------------------------------------------
   qa_headers_all_csv = []
+  all_ge_display_csvs = []
 
   for csv_filename in csv_filenames:
 
     csv_ob = telops_csv_file(csv_filename, outDir)
-    csv_ob.write_ge_display_data_csv()
+    csv_ge_display = csv_ob.write_ge_display_data_csv()
+    all_ge_display_csvs.append(csv_ge_display)
     quality_info_header = csv_ob.get_qa_data()
     qa_headers_all_csv.append(quality_info_header)
     #qa_headers_all_csv.append(quality_info_header.copy())
@@ -376,6 +419,7 @@ def main():
     os.remove(outname_csv_all_qa_headers)
   telops_csv_file.write_all_qa_data_csv(
           outname_csv_all_qa_headers, qa_headers_all_csv, outDir)
+  telops_csv_file.write_all_ge_display_csv(all_ge_display_csvs, outDir)
 
 if __name__ == '__main__':
   main()

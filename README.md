@@ -30,6 +30,10 @@
     (-o flag, optional) and look like: *.report_ge_display_data.csv
     and all_qa_headers.csv.
 
+    Second example:
+    $ python3 telops_csv_dump.py -d <input_directory> -o <output_directory>
+
+
 ###### VERSION
     
     Beta Version
