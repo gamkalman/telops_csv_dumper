@@ -37,7 +37,7 @@
 ###### VERSION
     
     Beta Version
-    Last Updated: 25 October 2026
+    Last Updated: 27 October 2026
 
 ###### 3rd party Python libraries used
 

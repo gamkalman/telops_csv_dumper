@@ -116,8 +116,7 @@ class telops_csv_file(object):
     
     # get header line
     # ---------------
-    csv_header_line = [s.replace('_', ' ') 
-            for s in list(qa_headers[0].keys())]
+    csv_header_line = [s.replace('_', ' ') for s in list(qa_headers[0].keys())]
 
     with open(outname_csv, mode = 'w', newline = '', encoding = 'utf-8') as f:
       
@@ -150,8 +149,7 @@ class telops_csv_file(object):
     
     # establish name of output CSV data with GE display data
     # ------------------------------------------------------
-    outname_csv = self.filename.replace(
-            '.csv', '_ge_display_data.csv')
+    outname_csv = self.filename.replace('.csv', '_ge_display_data.csv')
     if os.path.isfile(outname_csv):
       os.remove(outname_csv)
  
@@ -300,8 +298,8 @@ class telops_csv_file(object):
           self.qa_hash['Plume_Expansion'] = float(row[0].split(';')[1])
         if first_entry.lower().startswith('bad pixels'):
           self.qa_hash['Bad_Pixels'] = float(list(filter(None, row[0].split(';')))[-1])
-        if first_entry.lower().startswith('saturated pixels') and 'current' not \
-                in first_entry.lower() and 'counts' not in first_entry.lower():
+        if first_entry.lower().startswith('saturated pixels') and 'current' not in first_entry.lower() \
+                and 'counts' not in first_entry.lower():
           self.qa_hash['Saturated_Pixels'] = float(list(filter(None, row[0].split(';')))[-1])
         if first_entry.lower().startswith('saturated pixels in counts'):
           self.qa_hash['Saturated_Pixels_in_Counts'] = float(list(filter(None, row[0].split(';')))[-1])
@@ -412,13 +410,11 @@ def main():
     all_ge_display_csvs.append(csv_ge_display)
     quality_info_header = csv_ob.get_qa_data()
     qa_headers_all_csv.append(quality_info_header)
-    #qa_headers_all_csv.append(quality_info_header.copy())
 
   outname_csv_all_qa_headers = os.path.join(outDir, 'all_qa_headers.csv')
   if os.path.isfile(outname_csv_all_qa_headers):
     os.remove(outname_csv_all_qa_headers)
-  telops_csv_file.write_all_qa_data_csv(
-          outname_csv_all_qa_headers, qa_headers_all_csv, outDir)
+  telops_csv_file.write_all_qa_data_csv(outname_csv_all_qa_headers, qa_headers_all_csv, outDir)
   telops_csv_file.write_all_ge_display_csv(all_ge_display_csvs, outDir)
 
 if __name__ == '__main__':
