@@ -1,4 +1,5 @@
 #!/usr/bin/python3
+import gc
 import os
 import copy
 import sys
@@ -76,26 +77,24 @@ class telops_csv_file(object):
   @staticmethod
   def write_all_ge_display_csv(csv_filenames: list, outDir: str) -> None:
 
-    # initialize new Excel workbook and sheet
-    # ---------------------------------------
-    wb = openpyxl.Workbook()
-    ws = wb.active
-
     # define 'light black' / light gray hex color code
     # ------------------------------------------------
-    #light_black_fill = PatternFill(start_color = 'EFEFEF', 
-    #        end_color = 'EFEFEF', fill_type = 'solid')
     light_black_fill = PatternFill(start_color = '000000', 
             end_color = '000000', fill_type = 'solid')
     white_font = Font(color = 'FFFFFF')
 
     # get header line
     # ---------------
-    with open(csv_filenames[0], mode = 'r', newline = '', encoding = 'utf-8') as f:
-      reader = csv.reader(f)
-      header_line = next(reader)
+    wb = openpyxl.load_workbook(csv_filenames[0], data_only = True)
+    sheet = wb.active
+    headers = next(sheet.iter_rows(max_row = 1, values_only = True))
+    header_line = list(headers)
+    
+    # clean up
+    # --------
+    del wb
 
-    # gather all CSV data fro mall files (GE display)
+    # gather all CSV data from all files (GE display)
     # -----------------------------------------------
     all_ge_display_lines_cnt_gt_0 = []
     all_ge_display_lines = []
@@ -104,13 +103,26 @@ class telops_csv_file(object):
     all_ge_display_lines_cnt_gt_0.append(header_line)
 
     for csv_filename in csv_filenames:
-      with open(csv_filename, mode = 'r', newline = '', encoding = 'utf-8') as f:
-        reader = csv.reader(f)
-        next(reader)
+      
+      wb = openpyxl.load_workbook(csv_filename, read_only = True)
+      ws = wb.active
+        
+      for row in ws.iter_rows(min_row = 2, values_only = True):
+        row = list(row)
+        lat, lng = float(row[2]), float(row[3])
+        row[2] = f"{lat:.10f}"
+        row[3] = f"{lng:.10f}"
+        all_ge_display_lines.append(row)
+    
+    # delete and clean up
+    # -------------------
+    del wb, ws
 
-        for row in reader:
-          all_ge_display_lines.append(row)
-
+    # initialize new Excel workbook and sheet
+    # ---------------------------------------
+    wb = openpyxl.Workbook()
+    ws = wb.active
+    
     # append data line by line
     # ------------------------
     for row_idx, row_data in enumerate(all_ge_display_lines, start = 1):
@@ -141,36 +153,46 @@ class telops_csv_file(object):
     # write those rows with cnt > 0 to their own CSV
     # ----------------------------------------------
     outname_csv_all_ge_display_data_cnt_gt_0 = os.path.join(outDir, \
-            'all_ge_display_data_pixel_cnt_gt_0.csv')
+            'all_ge_display_data_pixel_cnt_gt_0.xlsx')
     if os.path.isfile(outname_csv_all_ge_display_data_cnt_gt_0):
       os.remove(outname_csv_all_ge_display_data_cnt_gt_0)
 
-    with open(outname_csv_all_ge_display_data_cnt_gt_0, 'w', newline = '', encoding = 'utf-8') as f:
-      writer = csv.writer(f)
-      
-      for row_cnt_gt_0 in all_ge_display_lines_cnt_gt_0:
-        writer.writerow(row_cnt_gt_0)
+    wb = openpyxl.Workbook()
+    ws = wb.active
+
+    for row_cnt_gt_0 in all_ge_display_lines_cnt_gt_0:
+      ws.append(row_cnt_gt_0)
+    wb.save(outname_csv_all_ge_display_data_cnt_gt_0)
+    del wb, ws
 
   @staticmethod
-  def write_all_qa_data_csv(outname_csv: str, qa_headers: list, outDir: str) -> None:
+  def write_all_qa_data_csv(outname_csv: str, qa_header_lines: list, outDir: str) -> None:
    
     # remove csv if already exists
     # ----------------------------
     if os.path.isfile(outname_csv):
       os.remove(outname_csv)
-    
+   
     # get header line
     # ---------------
-    csv_header_line = [s.replace('_', ' ') for s in list(qa_headers[0].keys())]
+    csv_header_line = [s.replace('_', ' ') \
+            for s in list(qa_header_lines[0].keys())]
+    
+    wb = openpyxl.Workbook()
+    ws = wb.active
+    ws.append(csv_header_line)
 
-    with open(outname_csv, mode = 'w', newline = '', encoding = 'utf-8') as f:
+    for qa_row in qa_header_lines:
+      qa_csv_line = [str(s) for s in list(qa_row.values())]
+      lat = float(qa_csv_line[6])
+      lng = float(qa_csv_line[7])
+      lat, lng = f"{lat:.10f}", f"{lng:.10f}"
       
-      csv_writer = csv.writer(f)
-      csv_writer.writerow(csv_header_line)
+      qa_csv_line[6] = lat
+      qa_csv_line[7] = lng
 
-      for qa_header in qa_headers:
-        qa_csv_line = [str(s) for s in list(qa_header.values())]
-        csv_writer.writerow(qa_csv_line) 
+      ws.append(qa_csv_line)
+    wb.save(outname_csv)
 
   def write_ge_display_data_csv(self):
     '''
@@ -194,25 +216,28 @@ class telops_csv_file(object):
     
     # establish name of output CSV data with GE display data
     # ------------------------------------------------------
-    outname_csv = self.filename.replace('.csv', '_ge_display_data.csv')
+    outname_csv = self.filename.replace('.csv', '_ge_display_data.xlsx')
     if os.path.isfile(outname_csv):
       os.remove(outname_csv)
- 
+
+    # if user passed-in output directory, then append it to the filename
+    # ------------------------------------------------------------------
     if self.outdir:
       outname_csv = os.path.join(self.outdir, os.path.basename(outname_csv))
 
     chemical_display_data.pop(0)
+    wb = openpyxl.Workbook()
+    ws = wb.active
     line_counter = 0
 
-    with open(outname_csv, mode = 'w', newline = '', encoding = 'utf-8') as f:
-      csv_writer = csv.writer(f)
-      for csv_line in [full_csv_header] + chemical_display_data:
-        # prepend CSV, UTC time, lat/lon if not header (actual data)
-        # ----------------------------------------------------------
-        if line_counter > 0:
-          csv_line = [source_csv, measurement_time_csv, longitude, latitude] + csv_line
-        csv_writer.writerow(csv_line)
-        line_counter += 1
+    for csv_line in [full_csv_header] + chemical_display_data:
+      
+      if line_counter > 0:
+        csv_line = [source_csv, measurement_time_csv, f"{longitude:.10f}", f"{latitude:.10f}"] + csv_line
+      
+      ws.append(csv_line)
+      line_counter += 1
+    wb.save(outname_csv)
 
     # return output filename of csv created
     # -------------------------------------
@@ -456,11 +481,14 @@ def main():
     quality_info_header = csv_ob.get_qa_data()
     qa_headers_all_csv.append(quality_info_header)
 
-  outname_csv_all_qa_headers = os.path.join(outDir, 'all_qa_headers.csv')
+  outname_csv_all_qa_headers = os.path.join(outDir, 'all_qa_headers.xlsx')
   if os.path.isfile(outname_csv_all_qa_headers):
     os.remove(outname_csv_all_qa_headers)
-  telops_csv_file.write_all_qa_data_csv(outname_csv_all_qa_headers, qa_headers_all_csv, outDir)
-  telops_csv_file.write_all_ge_display_csv(all_ge_display_csvs, outDir)
+  
+  telops_csv_file.write_all_qa_data_csv(\
+          outname_csv_all_qa_headers, qa_headers_all_csv, outDir)
+  telops_csv_file.write_all_ge_display_csv(\
+          all_ge_display_csvs, outDir)
 
 if __name__ == '__main__':
   main()
