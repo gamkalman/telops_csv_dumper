@@ -7,6 +7,8 @@ import csv
 import logging
 import glob
 import numpy as np
+import openpyxl
+from openpyxl.styles import PatternFill, Font
 from collections import OrderedDict
 
 # constants
@@ -74,16 +76,32 @@ class telops_csv_file(object):
   @staticmethod
   def write_all_ge_display_csv(csv_filenames: list, outDir: str) -> None:
 
-    # get header line ; we can just use any file (first one)
-    # to get it
-    # ------------------------------------------------------
+    # initialize new Excel workbook and sheet
+    # ---------------------------------------
+    wb = openpyxl.Workbook()
+    ws = wb.active
+
+    # define 'light black' / light gray hex color code
+    # ------------------------------------------------
+    #light_black_fill = PatternFill(start_color = 'EFEFEF', 
+    #        end_color = 'EFEFEF', fill_type = 'solid')
+    light_black_fill = PatternFill(start_color = '000000', 
+            end_color = '000000', fill_type = 'solid')
+    white_font = Font(color = 'FFFFFF')
+
+    # get header line
+    # ---------------
     with open(csv_filenames[0], mode = 'r', newline = '', encoding = 'utf-8') as f:
       reader = csv.reader(f)
       header_line = next(reader)
-   
-    # gather all CSV data from all files (GE display)
+
+    # gather all CSV data fro mall files (GE display)
     # -----------------------------------------------
+    all_ge_display_lines_cnt_gt_0 = []
     all_ge_display_lines = []
+
+    all_ge_display_lines.append(header_line)
+    all_ge_display_lines_cnt_gt_0.append(header_line)
 
     for csv_filename in csv_filenames:
       with open(csv_filename, mode = 'r', newline = '', encoding = 'utf-8') as f:
@@ -93,22 +111,49 @@ class telops_csv_file(object):
         for row in reader:
           all_ge_display_lines.append(row)
 
-    # finally write out CSV with ALL GE dispaly data
-    # ----------------------------------------------
-    outname_csv_all_ge_display_data = os.path.join(outDir, 'all_ge_display_data.csv')
+    # append data line by line
+    # ------------------------
+    for row_idx, row_data in enumerate(all_ge_display_lines, start = 1):
+
+      # append the row-data to the Excel sheet
+      # --------------------------------------
+      ws.append(row_data)
+
+      # get pixel count
+      # ---------------
+      pixel_count = None
+      if row_idx > 1:
+        pixel_count = int(row_data[8])
+
+      # fill row to black if pixel count < 1
+      # ------------------------------------
+      if pixel_count:
+        all_ge_display_lines_cnt_gt_0.append(row_data)
+        for cell in ws[row_idx]: 
+          cell.fill = light_black_fill
+          cell.font = white_font
+
+    outname_csv_all_ge_display_data = os.path.join(outDir, 'all_ge_display_data.xlsx')
     if os.path.isfile(outname_csv_all_ge_display_data):
       os.remove(outname_csv_all_ge_display_data)
+    wb.save(outname_csv_all_ge_display_data)
+ 
+    # write those rows with cnt > 0 to their own CSV
+    # ----------------------------------------------
+    outname_csv_all_ge_display_data_cnt_gt_0 = os.path.join(outDir, \
+            'all_ge_display_data_pixel_cnt_gt_0.csv')
+    if os.path.isfile(outname_csv_all_ge_display_data_cnt_gt_0):
+      os.remove(outname_csv_all_ge_display_data_cnt_gt_0)
 
-    with open(outname_csv_all_ge_display_data, 'w', newline = '', encoding = 'utf-8') as f:
+    with open(outname_csv_all_ge_display_data_cnt_gt_0, 'w', newline = '', encoding = 'utf-8') as f:
       writer = csv.writer(f)
-      writer.writerow(header_line)
-
-      for ge_display_line in all_ge_display_lines:
-        writer.writerow(ge_display_line)
+      
+      for row_cnt_gt_0 in all_ge_display_lines_cnt_gt_0:
+        writer.writerow(row_cnt_gt_0)
 
   @staticmethod
   def write_all_qa_data_csv(outname_csv: str, qa_headers: list, outDir: str) -> None:
-    
+   
     # remove csv if already exists
     # ----------------------------
     if os.path.isfile(outname_csv):
