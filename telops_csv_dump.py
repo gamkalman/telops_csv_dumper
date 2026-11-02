@@ -475,6 +475,11 @@ def main():
 
   for csv_filename in csv_filenames:
 
+    if os.path.basename(csv_filename).startswith('all_'):
+      continue
+    if 'display_data' in os.path.basename(csv_filename):
+      continue
+
     csv_ob = telops_csv_file(csv_filename, outDir)
     csv_ge_display = csv_ob.write_ge_display_data_csv()
     all_ge_display_csvs.append(csv_ge_display)
