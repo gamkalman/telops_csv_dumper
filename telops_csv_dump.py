@@ -153,7 +153,7 @@ class telops_csv_file(object):
     # write those rows with cnt > 0 to their own CSV
     # ----------------------------------------------
     outname_csv_all_ge_display_data_cnt_gt_0 = os.path.join(outDir, \
-            'all_ge_display_data_pixel_cnt_gt_0.xlsx')
+            'all_ge_display_detects_only.xlsx')
     if os.path.isfile(outname_csv_all_ge_display_data_cnt_gt_0):
       os.remove(outname_csv_all_ge_display_data_cnt_gt_0)
 
