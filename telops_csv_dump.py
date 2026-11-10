@@ -135,7 +135,8 @@ class telops_csv_file(object):
       # ---------------
       pixel_count = None
       if row_idx > 1:
-        pixel_count = int(row_data[8])
+        if not str(row_data[8]).strip().lower() == 'none': 
+          pixel_count = int(row_data[8])
 
       # fill row to black if pixel count < 1
       # ------------------------------------
@@ -475,6 +476,8 @@ def main():
 
   for csv_filename in csv_filenames:
 
+    if not csv_filename.lower().endswith('.csv'):
+      continue
     if os.path.basename(csv_filename).startswith('all_'):
       continue
     if 'display_data' in os.path.basename(csv_filename):

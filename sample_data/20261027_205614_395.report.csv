@@ -1,0 +1,17 @@
+Name;Value;Unit
+Datacube Id;179313457439508201;
+Measurement time;2026-10-27 20:56:14.395;UTC
+Report time;2026-10-27 20:58:04;UTC
+Width;240;px
+Height;240;px
+OffsetX;40;px
+OffsetY;8;px
+Latitude ground;-0.000001;°
+Longitude ground;0.000001;°
+
+
+Name;Formula;Visible;Color;Pixel cnt [px];Area [m²];Mass [g];Concentration Max [ppm*m];Centroid x [px];Centroid y [px];Latitude [°];Longitude [°];
+Bad pixels;;0;#ffff00;81;;;
+Saturated pixels;;0;#ff0000;0;;;
+Saturated pixels in counts;;0;#ff0000;0;;;
+Saturated pixels in current;;0;#ffa500;0;;;

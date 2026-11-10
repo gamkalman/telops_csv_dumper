@@ -1,0 +1,58 @@
+Name;Value;Unit
+Datacube Id;179330312322775328;
+Measurement time;2026-10-29 19:45:23.228;UTC
+Report time;2026-10-29 19:45:53;UTC
+Width;320;px
+Height;100;px
+OffsetX;0;px
+OffsetY;78;px
+Image size X;174.79;m
+Image size Y;54.62;m
+Pixel area;0.30;m²
+Latitude ground;33.381050;°
+Longitude ground;-97.123754;°
+Above ground level;738.00;m
+Bearing;-102.25;°
+Timestamp;2026-10-29 19:46:10.866;UTC
+Brightness temp percentile 25;298.51;K
+Brightness temp percentile 50;298.97;K
+Brightness temp percentile 75;299.35;K
+
+
+Display Sensitivity;100;%;
+Opacity min;50;%;
+Opacity max;95;%;
+Clean Background Fraction;0.5;;
+Background Pca Energy Fraction;0.55;;
+PFA;0.0001;;
+Dual Test PFA;0.0001;;
+Dual Test Correlation Percentile;99.9;;
+Plume Expansion PFA;0.3;;
+Plume Expansion PFA Percentile;10;;
+Identification Criteria Type;0;;
+Identification Threshold;7.5;;
+Sensitivity;50;;
+Specificity;50;;
+Plume Expansion;50;;
+
+
+Name;Formula;Visible;Color;Pixel cnt [px];Area [m²];Mass [g];Concentration Max [ppm*m];Centroid x [px];Centroid y [px];Latitude [°];Longitude [°];
+Bad pixels;;0;#ffff00;29;8.65;;
+Saturated pixels;;0;#ff0000;1;0.30;;
+Saturated pixels in counts;;0;#ff0000;1;0.30;;
+Saturated pixels in current;;0;#ffa500;0;0.00;;
+Naphthalene;C10H8;1;#d2f53c;0;;;;
+Tetrachloroethylene;C2Cl4;1;#800000;0;;;;
+Ethylene;C2H4;1;#f58230;0;;;;
+1,3-Butadiene;C4H6;1;#008080;0;;;;
+1-Butene;C4H8;1;#3cb44b;0;;;;
+Isobutene;C4H8;1;#46f0f0;0;;;;
+isoprene;C5H8;1;#aa6e28;0;;;;
+n-Hexane;C6H14;1;#0000f0;0;;;;
+Benzene;C6H6;1;#0082c8;0;;;;
+n-Heptane;C7H16;1;#dcbeff;0;;;;
+Styrene (monomer);C8H8;1;#ffd7b4;0;;;;
+Acetone;CH3COCH3;1;#aaffc3;0;;;;
+Formaldehyde;H2CO;1;#fabed4;0;;;;
+m-xylene;m-C6H5(CH3)2;1;#911eb4;0;;;;
+o-Xylene;o-C6H5(CH3)2;1;#f032e6;0;;;;
