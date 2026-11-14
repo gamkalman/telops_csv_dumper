@@ -234,8 +234,8 @@ class telops_csv_file(object):
     for csv_line in [full_csv_header] + chemical_display_data:
       
       if line_counter > 0:
-        csv_line = [source_csv, measurement_time_csv, f"{longitude:.10f}", f"{latitude:.10f}"] + csv_line
-      
+        csv_line = [source_csv, measurement_time_csv, f"{latitude:.10f}", f"{longitude:.10f}"] + csv_line
+     
       ws.append(csv_line)
       line_counter += 1
     wb.save(outname_csv)
@@ -257,13 +257,16 @@ class telops_csv_file(object):
     chemical_lines = []
 
     with open(self.filename, mode = 'r', newline = '', encoding = 'latin1') as f:
-      csv_reader = csv.reader(f)
+      csv_reader = csv.reader(f, delimiter = '\t')
 
       for row in csv_reader:
         # skip empty row
         # --------------
         if len(row) < 1: 
           continue
+
+        #if '20261029_212214_986' in self.filename:
+        #  print(row)
 
         # skip any QA info
         # ----------------

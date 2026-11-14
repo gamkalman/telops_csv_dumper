@@ -37,13 +37,14 @@
 ###### VERSION
     
     Beta Version
-    Last Updated: 10 November 2026
+    Last Updated: 14 November 2026
 
 ###### 3rd party Python libraries used
 
     The required 3rd-party Python libraries are required:
     numpy - for array manipulation and matrix computations 
     openpyxl - to write Excel spreadsheet (.xlsx) with specific formatting
+    csv - not actually 3rd party (built-in package)
 
 ###### PYTHON VERSION:
      
